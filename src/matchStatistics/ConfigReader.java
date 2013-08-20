@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
 
-public class ConfigReaderStianENoob{
+public class ConfigReader{
 
 	public static void readConfig(String path) {
 		try {
