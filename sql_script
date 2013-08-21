@@ -1,14 +1,14 @@
-CREATE TABLE match {
+CREATE TABLE match (
     id INT AUTO_INCREMENT NOT NULL,
     homePId INT NOT NULL,
     awayPId INT NOT NULL,
     homeGoals INT NOT NULL,
     awayGoals INT NOT NULL,
     PRIMARY KEY (id)
-};
+);
 
-CREATE TABLE player {
+CREATE TABLE player (
     id INT AUTO_INCREMENT NOT NULL,
     name VARCHAR(30) NOT NULL,
     PRIMARY KEY (id)
-};
+);
