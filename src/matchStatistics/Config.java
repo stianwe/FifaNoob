@@ -20,7 +20,7 @@ public class Config {
 	public static final String PLAYER_ID = "id";
 	
 	
-	public static final String MATCH_TABLE_NAME = "match";
+	public static final String MATCH_TABLE_NAME = "mmatch";
 	
 	public static final String MATCH_ID = "id";
 	

@@ -15,13 +15,26 @@ public class ScoreBoard {
 	
 	private List<Match> addedMatches;
 	
-	// Mapping from user name to user id
+	private Exception exception;
+	
+	// Mapping from user name to player id
 	private Map<String, Integer> playerIds;
+	// Mapping from id to player
+	private Map<Integer, Player> players;
 	
 	public ScoreBoard() {
 		addedMatches = new ArrayList<Match>();
 		matches = new ArrayList<Match>();
 		playerIds = new HashMap<String, Integer>();
+		players = new HashMap<Integer, Player>();
+	}
+	
+	public Exception getException() {
+		return exception;
+	}
+	
+	public boolean configIsLoaded() {
+		return Config.SQLURL != null;
 	}
 	
 	public void addMatch(Match m) {
@@ -35,6 +48,10 @@ public class ScoreBoard {
 	
 	public Match getMatch(int i) {
 		return matches.get(i);
+	}
+	
+	public int getNumberOfPlayers() {
+		return players.size();
 	}
 	
 	public MatchStatistics getMatchStatistics(Player player) {
@@ -56,7 +73,7 @@ public class ScoreBoard {
 		return stats;
 	}
 	
-	public void loadPlayers() {
+	public boolean loadPlayers() {
 		Connection con = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -64,9 +81,15 @@ public class ScoreBoard {
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM " + Config.PLAYER_TABLE_NAME);
 			while (rs.next()) {
-				playerIds.put(rs.getString(Config.PLAYER_NAME), rs.getInt(Config.PLAYER_ID));
+				String playerName = rs.getString(Config.PLAYER_NAME);
+				int playerId = rs.getInt(Config.PLAYER_ID);
+				playerIds.put(playerName, playerId);
+				players.put(playerId, new Player(playerName));
 			}
+			return true;
 		} catch(Exception e) {
+			exception = e;
+			return false;
 		} finally {
 			try {
 				con.close();
@@ -95,7 +118,7 @@ public class ScoreBoard {
 		}
 	}
 	
-	public void save() {
+	public void saveMatches() {
 		Connection con = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -110,6 +133,32 @@ public class ScoreBoard {
 			}
 			addedMatches.clear();
 		} catch(Exception e) {
+		} finally {
+			try {
+				con.close();
+			} catch(Exception e) {
+			}
+		}
+	}
+	
+	public boolean loadMatches() {
+		Connection con = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection(Config.SQLURL, Config.SQLUsername, Config.SQLPassword);
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM " + Config.MATCH_TABLE_NAME);
+			while (rs.next()) {
+				matches.add(new Match(
+						players.get(rs.getInt(Config.MATCH_HOME_PLAYER_ID)), 
+						players.get(rs.getInt(Config.MATCH_AWAY_PLAYER_ID)), 
+						rs.getInt(Config.MATCH_HOME_GOALS), 
+						rs.getInt(Config.MATCH_AWAY_GOALS)));
+			}
+			return true;
+		} catch(Exception e) {
+			exception = e;
+			return false;
 		} finally {
 			try {
 				con.close();
