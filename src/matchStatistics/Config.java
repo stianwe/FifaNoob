@@ -31,4 +31,6 @@ public class Config {
 	public static final String MATCH_HOME_GOALS = "homeGoals";
 	
 	public static final String MATCH_AWAY_GOALS = "awayGoals";
+	
+	public static final String MATCH_TIME = "time";
 }

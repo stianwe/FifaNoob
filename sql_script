@@ -4,6 +4,7 @@ CREATE TABLE mmatch (
     awayPId INT NOT NULL,
     homeGoals INT NOT NULL,
     awayGoals INT NOT NULL,
+    time BIGINT,
     PRIMARY KEY (id)
 ) ENGINE=INNODB;
 

@@ -17,8 +17,6 @@ public class ScoreBoard {
 	
 	private Exception exception;
 	
-	private int playerCounter = -1;
-	
 	// Mapping from user name to player id
 	private Map<String, Integer> playerIds;
 	// Mapping from id to player
@@ -164,11 +162,13 @@ public class ScoreBoard {
 			con = DriverManager.getConnection(Config.SQLURL, Config.SQLUsername, Config.SQLPassword);
 			Statement st = con.createStatement();
 			for (Match m : addedMatches) {
-				st.executeUpdate("INSERT INTO " + Config.MATCH_TABLE_NAME + " (" +
-						Config.MATCH_HOME_PLAYER_ID + ", " + Config.MATCH_AWAY_PLAYER_ID +
-						", " + Config.MATCH_HOME_GOALS + ", " + Config.MATCH_AWAY_GOALS + ") " +
-						"VALUES (" + playerIds.get(m.getHomePlayer().getName()) + ", " + playerIds.get(m.getAwayPlayer().getName()) + ", " +
-						m.getHomeGoals() + ", " + m.getAwayGoals() + ")");
+				st.executeUpdate("INSERT INTO " + Config.MATCH_TABLE_NAME + 
+						" (" + Config.MATCH_HOME_PLAYER_ID + ", " + Config.MATCH_AWAY_PLAYER_ID +
+						", " + Config.MATCH_HOME_GOALS + ", " + Config.MATCH_AWAY_GOALS + ", " + Config.MATCH_TIME +") " +
+						"VALUES " + 
+						"(" + playerIds.get(m.getHomePlayer().getName()) + ", " + 
+						playerIds.get(m.getAwayPlayer().getName()) + ", " +
+						m.getHomeGoals() + ", " + m.getAwayGoals() + ", " + System.currentTimeMillis() + ")");
 			}
 			
 			addedMatches.clear();
