@@ -87,7 +87,7 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
         %>
         <tr>
             <td>
-                <img src = "<%= ms.getPlayer().getPicture() %>"></img>
+                <img src = "<%= ms.getPlayer().getPicture() == null ? ms.getPlayer().getPicture() : "http://www.faithlineprotestants.org/wp-content/uploads/2010/12/facebook-default-no-profile-pic.jpg" %>" width="50" height="50"></img>
             </td>
             <td>
                 <%= ms.getPlayer().getName() %>
