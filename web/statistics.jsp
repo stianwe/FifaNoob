@@ -52,6 +52,9 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
 <table border="1">
     <tr>
         <th>
+            
+        </th>
+        <th>
             Player
         </th>
         <th>
@@ -84,6 +87,9 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
         %>
         <tr>
             <td>
+                <img src = "<%= ms.getPlayer().getPicture() != null ? ms.getPlayer().getPicture() : "http://www.faithlineprotestants.org/wp-content/uploads/2010/12/facebook-default-no-profile-pic.jpg" %>" width="50" height="50"></img>
+            </td>
+            <td>
                 <%= ms.getPlayer().getName() %>
             </td>
             <td>
@@ -105,10 +111,10 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
                 <%= ms.goalsConceded %>
             </td>
             <td>
-                <%= ms.wins*3+ms.draws %>
+                <%= ms.points %>
             </td>
             <td>
-                <%= new DecimalFormat("#.##").format((ms.wins*3+ms.draws)/((ms.wins+ms.draws+ms.losses)*1.0)) %>
+                <%= new DecimalFormat("#.##").format(ms.avgPoints) %>
         </tr>
         <%
     }

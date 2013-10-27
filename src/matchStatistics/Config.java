@@ -19,6 +19,8 @@ public class Config {
 	
 	public static final String PLAYER_ID = "id";
 	
+	public static final String PLAYER_PICTURE = "picture";
+	
 	
 	public static final String MATCH_TABLE_NAME = "mmatch";
 	

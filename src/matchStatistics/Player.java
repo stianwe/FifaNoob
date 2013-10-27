@@ -2,6 +2,7 @@ package matchStatistics;
 
 public class Player {
 
+	private String picture; 
 	private String name;
 	
 	public Player(String name) {
@@ -16,6 +17,14 @@ public class Player {
 		this.name = name;
 	}
 	
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if (!(other instanceof Player)) {
