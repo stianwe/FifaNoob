@@ -10,6 +10,7 @@
     for (int i = 0; i < scoreBoard.getNumberOfMatches(); i++) {
         Match m = scoreBoard.getMatch(i);
         String playerName = request.getParameter("player");
+        out.println("Equal? " + playerName + " ? " + m.getHomePlayer().getName() + " ? " + m.getAwayPlayer().getName() + "?");
         if (!m.getHomePlayer().getName().equalsIgnoreCase(playerName) && !m.getAwayPlayer().getName().equalsIgnoreCase(playerName)) {
             continue;
         }
