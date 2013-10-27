@@ -87,7 +87,7 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
         %>
         <tr>
             <td>
-                <img src = "<%= ms.getPlayer.getPicture() %>"></img>
+                <img src = "<%= ms.getPlayer().getPicture() %>"></img>
             </td>
             <td>
                 <%= ms.getPlayer().getName() %>
@@ -114,7 +114,7 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
                 <%= ms.points %>
             </td>
             <td>
-                <%= new DecimalFormat("#.##").format(ms.avgPoints)) %>
+                <%= new DecimalFormat("#.##").format(ms.avgPoints) %>
         </tr>
         <%
     }
