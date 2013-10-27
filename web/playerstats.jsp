@@ -1,6 +1,9 @@
 <jsp:useBean id="scoreBoard" class="matchStatistics.ScoreBoard" scope="page" />
 <jsp:useBean id="match" class="matchStatistics.Match" scope="page" />
 <jsp:setProperty name="match" property="*" />
+<%@ page import="matchStatistics.Player" %>
+<%@ page import="matchStatistics.Match" %>
+<%@ page import="matchStatistics.MatchStatistics" %>
 
 <table border="1">
     <tr>
