@@ -4,6 +4,7 @@
 <%@ page import="matchStatistics.Player" %>
 <%@ page import="matchStatistics.Match" %>
 <%@ page import="matchStatistics.MatchStatistics" %>
+<%@ page import="java.text.*" %>
     Config has been loaded: <%= scoreBoard.configIsLoaded() %> :)<br/>
 <%
     if (!scoreBoard.loadPlayers()) {
@@ -33,8 +34,18 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
 
 
 %>
-
-
+<br/>
+<br/>
+<h1>Add match results:</h1>
+<form>
+    <input type="text" name="homePlayerName">
+    -
+    <input type="text" name="awayPlayerName">
+    <input type="text" name="homeGoals">
+    -
+    <input type="text" name="awayGoals">
+    <input type="submit" value="Submit">
+</form>
 <br/>
 <br/>
 
@@ -60,6 +71,12 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
         </th>
         <th>
             Goals conceded
+        </th>
+        <th>
+            Points
+        </th>
+        <th>
+            Points average
         </th>
     </tr>
     <%
@@ -87,6 +104,11 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
             <td>
                 <%= ms.goalsConceded %>
             </td>
+            <td>
+                <%= ms.wins*3+ms.draws %>
+            </td>
+            <td>
+                <%= new DecimalFormat("#.##").format((ms.wins*3+ms.draws)/((ms.wins+ms.draws+ms.losses)*1.0)) %>
         </tr>
         <%
     }
@@ -115,13 +137,4 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
 <br/>
 <br/>
 
-<h1>Add match results:</h1>
-<form>
-    <input type="text" name="homePlayerName">
-    -
-    <input type="text" name="awayPlayerName">
-    <input type="text" name="homeGoals">
-    -
-    <input type="text" name="awayGoals">
-    <input type="submit" value="Submit">
-</form>
+
