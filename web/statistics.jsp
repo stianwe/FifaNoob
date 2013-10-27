@@ -105,10 +105,10 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
                 <%= ms.goalsConceded %>
             </td>
             <td>
-                <%= ms.wins*3+ms.draws %>
+                <%= ms.points %>
             </td>
             <td>
-                <%= new DecimalFormat("#.##").format((ms.wins*3+ms.draws)/((ms.wins+ms.draws+ms.losses)*1.0)) %>
+                <%= new DecimalFormat("#.##").format(ms.avgPoints)) %>
         </tr>
         <%
     }
