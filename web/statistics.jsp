@@ -52,6 +52,9 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
 <table border="1">
     <tr>
         <th>
+            
+        </th>
+        <th>
             Player
         </th>
         <th>
@@ -83,6 +86,9 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
     for (MatchStatistics ms : scoreBoard.getMatchStatistics()) {
         %>
         <tr>
+            <td>
+                <img src = "<%= ms.getPlayer.getPicture() %>"></img>
+            </td>
             <td>
                 <%= ms.getPlayer().getName() %>
             </td>
