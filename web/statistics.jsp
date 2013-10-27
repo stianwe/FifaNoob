@@ -90,7 +90,7 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
                 <img src = "<%= ms.getPlayer().getPicture() != null ? ms.getPlayer().getPicture() : "http://www.faithlineprotestants.org/wp-content/uploads/2010/12/facebook-default-no-profile-pic.jpg" %>" width="50" height="50"></img>
             </td>
             <td>
-                <%= ms.getPlayer().getName() %>
+                <a href="<%= "playerstats.jsp?player=" + ms.getPlayer().getName() %>"><%= ms.getPlayer().getName() %></a>
             </td>
             <td>
                 <%= ms.wins + ms.losses + ms.draws %>
