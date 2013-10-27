@@ -6,69 +6,25 @@
 <%@ page import="matchStatistics.MatchStatistics" %>
 
 <table border="1">
-    <tr>
-        <th>
-            
-        </th>
-
-        <th>
-            Player
-        </th>
-        <th>
-            Matches
-        </th>
-        <th>
-            Wins
-        </th>
-        <th>
-            Draws
-        </th>
-        <th>
-            Losses
-        </th>
-        <th>
-            Goals scored
-        </th>
-        <th>
-            Goals conceded
-        </th>
-    </tr>
     <%
-    String playerName = request.getParameter("player");
-    for (MatchStatistics ms : scoreBoard.getMatchStatistics()) {
-        if (!ms.getPlayer().getName().equalsIgnoreCase(playerName)) {
+    for (int i = 0; i < scoreBoard.getNumberOfMatches(); i++) {
+        Match m = scoreBoard.getMatch(i);
+        String playerName = request.getParameter("player");
+        if (!m.getHomePlayer().getName().equalsIgnoreCase(playerName) && !m.getAwayPlayer().getName().equalsIgnoreCase(playerName)) {
             continue;
         }
         %>
         <tr>
-            <td>
-                <img src = "<%= ms.getPlayer().getPicture() != null ? ms.getPlayer().getPicture() : "http://www.faithlineprotestants.org/wp-content/uploads/2010/12/facebook-default-no-profile-pic.jpg" %>" width="50" height="50"></img>
-            </td>
-            <td>
-                <%= ms.getPlayer().getName() %>
-            </td>
-            <td>
-                <%= ms.wins + ms.losses + ms.draws %>
-            </td>
-            <td>
-                <%= ms.wins %>
-            </td>
-            <td>
-                <%= ms.draws %>
-            </td>
-            <td>
-                <%= ms.losses %>
-            </td>
-            <td>
-                <%= ms.goalsScored %>
-            </td>
-            <td>
-                <%= ms.goalsConceded %>
-            </td>
+            <td><%= m.getHomePlayer().getName() %></td>
+            <td><%= m.getAwayPlayer().getName() %></td>
+            <td><%= m.getHomeGoals() %></td>
+            <td><%= m.getAwayGoals() %></td>
         </tr>
         <%
     }
     %>
 </table>
+
+
 
 
