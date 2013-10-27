@@ -96,6 +96,9 @@ public class ScoreBoard {
 				}
 			}
 		}
+		stats.points = 3*stats.points+stats.draws;
+		stats.matchesPlayed = stats.wins + stats.draws + stats.losses;
+		stats.avgPoints = stats.points/(stats.matchesPlayed*1.0);
 		
 		return stats;
 	}
@@ -112,6 +115,10 @@ public class ScoreBoard {
 				int playerId = rs.getInt(Config.PLAYER_ID);
 				playerIds.put(playerName, playerId);
 				players.put(playerId, new Player(playerName));
+				String picture = rs.getString(Config.PLAYER_PICTURE);
+				if (picture != null) {
+					players.get(playerId).setPicture(picture);
+				}
 			}
 			
 			return true;
