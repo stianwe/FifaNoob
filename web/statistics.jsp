@@ -107,7 +107,7 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
                 <%= ms.wins*3+ms.draws %>
             </td>
             <td>
-                <%= (ms.wins*3+ms.draws)/(ms.wins+ms.draws+ms.losses) %>
+                <%= (ms.wins*3+ms.draws)/((ms.wins+ms.draws+ms.losses)*1.0) %>
         </tr>
         <%
     }
