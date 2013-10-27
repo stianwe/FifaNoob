@@ -33,8 +33,18 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
 
 
 %>
-
-
+<br/>
+<br/>
+<h1>Add match results:</h1>
+<form>
+    <input type="text" name="homePlayerName">
+    -
+    <input type="text" name="awayPlayerName">
+    <input type="text" name="homeGoals">
+    -
+    <input type="text" name="awayGoals">
+    <input type="submit" value="Submit">
+</form>
 <br/>
 <br/>
 
@@ -60,6 +70,12 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
         </th>
         <th>
             Goals conceded
+        </th>
+        <th>
+            Points
+        </th>
+        <th>
+            Points average
         </th>
     </tr>
     <%
@@ -87,6 +103,11 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
             <td>
                 <%= ms.goalsConceded %>
             </td>
+            <td>
+                <%= ms.wins*3+ms.draws %>
+            </td>
+            <td>
+                <%= (ms.wins*3+ms.draws)/(ms.wins+ms.draws+ms.losses) %>
         </tr>
         <%
     }
@@ -115,13 +136,4 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
 <br/>
 <br/>
 
-<h1>Add match results:</h1>
-<form>
-    <input type="text" name="homePlayerName">
-    -
-    <input type="text" name="awayPlayerName">
-    <input type="text" name="homeGoals">
-    -
-    <input type="text" name="awayGoals">
-    <input type="submit" value="Submit">
-</form>
+
