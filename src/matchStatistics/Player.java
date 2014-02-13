@@ -1,20 +1,15 @@
 package matchStatistics;
 
-public class Player {
+public class Player extends jElo.Player {
 
 	private String picture; 
-	private String name;
 	
 	public Player(String name) {
-		this.name = name;
+		super(name);
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
+	public Player(String name, int rating) {
+		super(name, rating);
 	}
 	
 	public String getPicture() {
@@ -31,6 +26,6 @@ public class Player {
 			return super.equals(other);
 		}
 		
-		return ((Player) other).getName().equalsIgnoreCase(name);
+		return ((Player) other).getName().equalsIgnoreCase(getName());
 	}
 }
