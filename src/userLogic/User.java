@@ -20,7 +20,7 @@ public class User {
 	public final static String oldURL = "jdbc:mysql://mysql.stud.ntnu.no/stianwe_users";
 	public final static String URL = "jdbc:mysql://localhost/users";
 	public final static String USERNAME = "stianwe_test";
-	public final static String PASSWORD = "48214507";
+	public final static String PASSWORD = "SENSORED";
 	
 	private String username, password, email;
 	private int id;
