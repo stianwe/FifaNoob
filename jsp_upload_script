@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "Uploading files.."
+scp -r web/config_loader.jsp web/statistics.jsp root@192.168.0.102:/var/lib/tomcat7/webapps/ROOT/fifa/season2/
+echo "Done."

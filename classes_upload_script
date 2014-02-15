@@ -1,0 +1,9 @@
+#!/bin/sh
+echo "Uploading match statistics files.."
+scp -r src/matchStatistics/MatchStatistics.class src/matchStatistics/Player.class src/matchStatistics/Config.class src/matchStatistics/ConfigLoader.class src/matchStatistics/Match.class src/matchStatistics/ScoreBoard.class root@192.168.0.102:/var/lib/tomcat7/webapps/ROOT/WEB-INF/classes/matchStatistics/
+echo "Uploading rating files.."
+scp -r src/jElo/Player.class src/jElo/Calculator.class root@192.168.0.102:/var/lib/tomcat7/webapps/ROOT/WEB-INF/classes/jElo/
+echo "Done uploading files."
+echo "Restarting tomcat7.."
+ssh -C root@192.168.0.102 'service tomcat7 stop && service tomcat7 start'
+echo "Done."
