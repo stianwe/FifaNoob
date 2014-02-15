@@ -28,10 +28,19 @@ public class Calculator {
 	}
 	
 	public static void main(String[] args) {
-		int r1 = 1500, r2 = 1400;
-		System.out.println("Expected score for player with rating " + r1 + " against player with rating " + r2 + ": " + calculateExpectedScore(r1, r2));
-		System.out.println("Rating change for player1 win: " + calculateRatingChange(r1, r2, 1));
-		System.out.println("Rating change for player1 loss: " + calculateRatingChange(r1, r2, 0));
-		System.out.println("Rating change for player1 draw: " + calculateRatingChange(r1, r2, 0.5));
+		int r1 = 1500, r2 = 1500;
+		for (int i = 0; i < 10; i++) {
+			System.out.println("Expected score for player with rating " + r1 + " against player with rating " + r2 + ": " + calculateExpectedScore(r1, r2));
+			int change = calculateRatingChange(r1, r2, 1);
+			int change2 = calculateRatingChange(r2, r1, 0);
+			r1 += change;
+			r2 += change2;
+			System.out.println("Rating change for player1 win: " + change);
+			System.out.println("Rating change for player2 loss: " + change2);
+			System.out.println("New rating player1: " + r1);
+			System.out.println("New rating player2: " + r2);
+			//System.out.println("Rating change for player1 loss: " + calculateRatingChange(r1, r2, 0));
+			//System.out.println("Rating change for player1 draw: " + calculateRatingChange(r1, r2, 0.5));
+		}
 	}
 }

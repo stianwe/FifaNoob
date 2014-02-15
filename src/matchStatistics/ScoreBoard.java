@@ -1,5 +1,9 @@
 package matchStatistics;
 
+import jElo.Calculator;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -50,11 +54,36 @@ public class ScoreBoard {
 			addPlayerInternal(m.getHomePlayer());
 			addPlayerInternal(m.getAwayPlayer());
 			saveMatches();
+			updateRating(m);
+			List<Player> ps = new ArrayList<Player>();
+			ps.add(m.getHomePlayer());
+			ps.add(m.getAwayPlayer());
+			savePlayers(ps);
 			return true;
 		} catch (Exception e) {
 			exception = e;
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			sql = sw.toString();
 			return false;
 		}
+	}
+	
+	private void updateRating(Match m) {
+		double homeScore = 0, awayScore = 0;
+		if (m.getHomeGoals() > m.getAwayGoals()) {
+			homeScore = 1;
+		} else if (m.getHomeGoals() == m.getAwayGoals()) {
+			homeScore = 0.5;
+			awayScore = 0.5;
+		} else {
+			awayScore = 1;
+		}
+//		m.getHomePlayer().changeRating(Calculator.calculateRatingChange(m.getHomePlayer().getRating(), m.getAwayPlayer().getRating(), homeScore));
+//		m.getAwayPlayer().changeRating(Calculator.calculateRatingChange(m.getAwayPlayer().getRating(), m.getHomePlayer().getRating(), awayScore));
+		players.get(playerIds.get(m.getHomePlayer().getName())).changeRating(Calculator.calculateRatingChange(m.getHomePlayer().getRating(), m.getAwayPlayer().getRating(), homeScore));
+		players.get(playerIds.get(m.getAwayPlayer().getName())).changeRating(Calculator.calculateRatingChange(m.getAwayPlayer().getRating(), m.getHomePlayer().getRating(), awayScore));
 	}
 	
 	public int getNumberOfMatches() {
@@ -96,7 +125,7 @@ public class ScoreBoard {
 				}
 			}
 		}
-		stats.points = 3*stats.points+stats.draws;
+		stats.points = 3*stats.wins+stats.draws;
 		stats.matchesPlayed = stats.wins + stats.draws + stats.losses;
 		stats.avgPoints = stats.points/(stats.matchesPlayed*1.0);
 		
@@ -114,7 +143,7 @@ public class ScoreBoard {
 				String playerName = rs.getString(Config.PLAYER_NAME);
 				int playerId = rs.getInt(Config.PLAYER_ID);
 				playerIds.put(playerName, playerId);
-				players.put(playerId, new Player(playerName));
+				players.put(playerId, new Player(playerName, rs.getInt(Config.PLAYER_RATING)));
 				String picture = rs.getString(Config.PLAYER_PICTURE);
 				if (picture != null) {
 					players.get(playerId).setPicture(picture);
@@ -138,7 +167,8 @@ public class ScoreBoard {
 	public void addPlayer(Player p) throws Exception {
 		Connection con = null;
 		sql = "INSERT INTO " + Config.PLAYER_TABLE_NAME + 
-				" (" + Config.PLAYER_NAME + ") VALUES (\"" + p.getName() + "\")";
+				" (" + Config.PLAYER_NAME + ", " + Config.PLAYER_RATING + ") " +
+						"VALUES (\"" + p.getName() + "\", \"" + p.getRating() + "\")";
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(Config.SQLURL, Config.SQLUsername, Config.SQLPassword);
@@ -154,6 +184,29 @@ public class ScoreBoard {
 			playerIds.put(p.getName(), id);
 			players.put(id, p);
 			sql = "Added player " + p.getName() + " with id " + id;
+		} finally {
+			try {
+				con.close();
+			} catch(Exception e) {
+			}
+		}
+	}
+	
+	public void savePlayers(List<Player> players) throws Exception {
+		Connection con = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection(Config.SQLURL, Config.SQLUsername, Config.SQLPassword);
+			Statement st = con.createStatement();
+			for (Player pp : players) {
+				sql = "Before pp";
+				Player p = this.players.get(playerIds.get(pp.getName()));
+				sql = "UPDATE " + Config.PLAYER_TABLE_NAME + " SET " + Config.PLAYER_RATING + 
+						" = " + p.getRating() + " WHERE " + Config.PLAYER_NAME + " = \"" + p.getName() + "\"";
+				st.executeUpdate(sql);
+			}
+		} catch (Exception e) {
+			exception = e;
 		} finally {
 			try {
 				con.close();

@@ -21,6 +21,8 @@ public class Config {
 	
 	public static final String PLAYER_PICTURE = "picture";
 	
+	public static final String PLAYER_RATING = "rating";
+	
 	
 	public static final String MATCH_TABLE_NAME = "mmatch";
 	

@@ -5,7 +5,7 @@
 <%@ page import="matchStatistics.Match" %>
 <%@ page import="matchStatistics.MatchStatistics" %>
 <%@ page import="java.text.*" %>
-    Config has been loaded: <%= scoreBoard.configIsLoaded() %> :)<br/>
+<jsp:include page="config_loader.jsp" />
 <%
     if (!scoreBoard.loadPlayers()) {
         out.println("Failed to load players: " + scoreBoard.getException() + "<br/>");
@@ -81,6 +81,9 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
         <th>
             Points average
         </th>
+        <th>
+            Rating
+        </th>
     </tr>
     <%
     for (MatchStatistics ms : scoreBoard.getMatchStatistics()) {
@@ -115,6 +118,10 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
             </td>
             <td>
                 <%= new DecimalFormat("#.##").format(ms.avgPoints) %>
+            </td>
+            <td>
+                <%= ms.getPlayer().getRating() %>
+            </td>
         </tr>
         <%
     }
