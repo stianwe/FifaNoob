@@ -14,7 +14,7 @@ public class Seeding {
 
 	public final static String URL = "jdbc:mysql://localhost/users";
 	public final static String USERNAME = "stianwe_test";
-	public final static String PASSWORD = "48214507";
+	public final static String PASSWORD = "SENSORED";
 	
 	private List<Player> players;
 	
