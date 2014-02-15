@@ -6,6 +6,7 @@
 <%@ page import="matchStatistics.MatchStatistics" %>
 <%@ page import="java.text.*" %>
 <jsp:include page="config_loader.jsp" />
+    Config has been loaded: <%= scoreBoard.configIsLoaded() %> :)<br/>
 <%
     if (!scoreBoard.loadPlayers()) {
         out.println("Failed to load players: " + scoreBoard.getException() + "<br/>");
