@@ -54,11 +54,13 @@ public class ScoreBoard {
 			addPlayerInternal(m.getHomePlayer());
 			addPlayerInternal(m.getAwayPlayer());
 			saveMatches();
-			updateRating(m);
+			// We don't want to store rating in the database anymore
+			//updateRating(m);
 			List<Player> ps = new ArrayList<Player>();
 			ps.add(m.getHomePlayer());
 			ps.add(m.getAwayPlayer());
-			savePlayers(ps);
+			// We don't want to store rating in the database anymore
+			//savePlayers(ps);
 			return true;
 		} catch (Exception e) {
 			exception = e;
@@ -143,7 +145,9 @@ public class ScoreBoard {
 				String playerName = rs.getString(Config.PLAYER_NAME);
 				int playerId = rs.getInt(Config.PLAYER_ID);
 				playerIds.put(playerName, playerId);
-				players.put(playerId, new Player(playerName, rs.getInt(Config.PLAYER_RATING)));
+				// Do NOT load rating (we want to calculate it instead)
+//				players.put(playerId, new Player(playerName, rs.getInt(Config.PLAYER_RATING)));
+				players.put(playerId, new Player(playerName, Player.DEFAULT_STARTING_RATING));
 				String picture = rs.getString(Config.PLAYER_PICTURE);
 				if (picture != null) {
 					players.get(playerId).setPicture(picture);
@@ -248,11 +252,14 @@ public class ScoreBoard {
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM " + Config.MATCH_TABLE_NAME);
 			while (rs.next()) {
-				matches.add(new Match(
+				Match m = new Match(
 						players.get(rs.getInt(Config.MATCH_HOME_PLAYER_ID)), 
 						players.get(rs.getInt(Config.MATCH_AWAY_PLAYER_ID)), 
 						rs.getInt(Config.MATCH_HOME_GOALS), 
-						rs.getInt(Config.MATCH_AWAY_GOALS)));
+						rs.getInt(Config.MATCH_AWAY_GOALS));
+				matches.add(m);
+				// Calculate player ratings based on loaded matches
+				updateRating(m);
 			}
 			
 			return true;

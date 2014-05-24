@@ -6,7 +6,6 @@
 <%@ page import="matchStatistics.MatchStatistics" %>
 <%@ page import="java.text.*" %>
 <jsp:include page="config_loader.jsp" />
-    Config has been loaded: <%= scoreBoard.configIsLoaded() %> :)<br/>
 <%
     if (!scoreBoard.loadPlayers()) {
         out.println("Failed to load players: " + scoreBoard.getException() + "<br/>");
@@ -29,6 +28,7 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
     }
 
     match = new Match();
+	response.sendRedirect("statistics.jsp");
 } else if ((match.getHomePlayer() == null || match.getAwayPlayer() == null) && !(match.getHomePlayer() == null && match.getAwayPlayer() == null)) {
     out.println("Both players must be filled!");
 }

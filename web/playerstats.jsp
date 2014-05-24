@@ -1,16 +1,17 @@
-<jsp:useBean id="scoreBoard" class="matchStatistics.ScoreBoard" scope="page" />
-<jsp:useBean id="match" class="matchStatistics.Match" scope="page" />
-<jsp:setProperty name="match" property="*" />
+<jsp:useBean id="scoreBoard2" class="matchStatistics.ScoreBoard" scope="page" />
+<jsp:useBean id="match2" class="matchStatistics.Match" scope="page" />
+<jsp:setProperty name="match2" property="*" />
 <%@ page import="matchStatistics.Player" %>
 <%@ page import="matchStatistics.Match" %>
 <%@ page import="matchStatistics.MatchStatistics" %>
+<jsp:include page="config_loader.jsp" />
 
 <table border="1">
     <%
-    scoreBoard.loadPlayers();
-    scoreBoard.loadMatches();
-    for (int i = 0; i < scoreBoard.getNumberOfMatches(); i++) {
-        Match m = scoreBoard.getMatch(i);
+    scoreBoard2.loadPlayers();
+    scoreBoard2.loadMatches();
+    for (int i = 0; i < scoreBoard2.getNumberOfMatches(); i++) {
+        Match m = scoreBoard2.getMatch(i);
         String playerName = request.getParameter("player");
         if (!m.getHomePlayer().getName().equalsIgnoreCase(playerName) && !m.getAwayPlayer().getName().equalsIgnoreCase(playerName)) {
             continue;
