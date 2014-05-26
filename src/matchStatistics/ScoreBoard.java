@@ -21,6 +21,18 @@ public class ScoreBoard {
 	
 	private Exception exception;
 	
+	public static void main(String[] args) {
+		System.out.println("HEI");
+		ScoreBoard sb = new ScoreBoard();
+		Match m = new Match(new Player("Jan"), new Player("Stian"), 2, 3);
+		Match m2 = new Match(new Player("JAn"), new Player("Stian"), 2, 3);
+		sb.addMatch(m);
+		for (Player p : sb.players.values()) {
+			System.out.println(p.getName());
+		}
+		sb.addMatch(m2);
+	}
+	
 	// Mapping from user name to player id
 	private Map<String, Integer> playerIds;
 	// Mapping from id to player
@@ -169,6 +181,15 @@ public class ScoreBoard {
 	public String sql;
 	
 	public void addPlayer(Player p) throws Exception {
+		// We don't want any players with the same name but different case
+		boolean duplicate = false;
+		for (String name : playerIds.keySet()) {
+			if (name.equalsIgnoreCase(p.getName())) {
+				// So we only pretend that we added it
+				duplicate = true;
+				break;
+			}
+		}
 		Connection con = null;
 		sql = "INSERT INTO " + Config.PLAYER_TABLE_NAME + 
 				" (" + Config.PLAYER_NAME + ", " + Config.PLAYER_RATING + ") " +
@@ -177,7 +198,9 @@ public class ScoreBoard {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(Config.SQLURL, Config.SQLUsername, Config.SQLPassword);
 			Statement st = con.createStatement();
-			st.executeUpdate(sql);
+			if (!duplicate) {
+				st.executeUpdate(sql);
+			}
 			ResultSet rs = st.executeQuery("SELECT " + Config.PLAYER_ID + " FROM " +
 					Config.PLAYER_TABLE_NAME + " WHERE " + Config.PLAYER_NAME + "=\"" + p.getName() + '"');
 			if (!rs.next()) {
@@ -187,7 +210,7 @@ public class ScoreBoard {
 			int id = rs.getInt(Config.PLAYER_ID);
 			playerIds.put(p.getName(), id);
 			players.put(id, p);
-			sql = "Added player " + p.getName() + " with id " + id;
+			sql = !duplicate ? "Added player " + p.getName() + " with id " + id : "Did not add duplicate player";
 		} finally {
 			try {
 				con.close();
@@ -196,27 +219,35 @@ public class ScoreBoard {
 		}
 	}
 	
+	/**
+	 * WARNING! Does nothing
+	 * 
+	 * @param players
+	 * @throws Exception
+	 */
 	public void savePlayers(List<Player> players) throws Exception {
-		Connection con = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection(Config.SQLURL, Config.SQLUsername, Config.SQLPassword);
-			Statement st = con.createStatement();
-			for (Player pp : players) {
-				sql = "Before pp";
-				Player p = this.players.get(playerIds.get(pp.getName()));
-				sql = "UPDATE " + Config.PLAYER_TABLE_NAME + " SET " + Config.PLAYER_RATING + 
-						" = " + p.getRating() + " WHERE " + Config.PLAYER_NAME + " = \"" + p.getName() + "\"";
-				st.executeUpdate(sql);
-			}
-		} catch (Exception e) {
-			exception = e;
-		} finally {
-			try {
-				con.close();
-			} catch(Exception e) {
-			}
-		}
+		// No point in saving players, since we never change rating anymore
+		return;
+//		Connection con = null;
+//		try {
+//			Class.forName("com.mysql.jdbc.Driver");
+//			con = DriverManager.getConnection(Config.SQLURL, Config.SQLUsername, Config.SQLPassword);
+//			Statement st = con.createStatement();
+//			for (Player pp : players) {
+//				sql = "Before pp";
+//				Player p = this.players.get(playerIds.get(pp.getName()));
+//				sql = "UPDATE " + Config.PLAYER_TABLE_NAME + " SET " + Config.PLAYER_RATING + 
+//						" = " + p.getRating() + " WHERE " + Config.PLAYER_NAME + " = \"" + p.getName() + "\"";
+//				st.executeUpdate(sql);
+//			}
+//		} catch (Exception e) {
+//			exception = e;
+//		} finally {
+//			try {
+//				con.close();
+//			} catch(Exception e) {
+//			}
+//		}
 	}
 	
 	public void saveMatches() throws Exception {
