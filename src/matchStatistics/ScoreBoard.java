@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -24,13 +25,18 @@ public class ScoreBoard {
 	public static void main(String[] args) {
 		System.out.println("HEI");
 		ScoreBoard sb = new ScoreBoard();
-		Match m = new Match(new Player("Jan"), new Player("Stian"), 2, 3);
-		Match m2 = new Match(new Player("JAn"), new Player("Stian"), 2, 3);
+		Match m = new Match(new Player("Test"), new Player("Stian"), 0, 10000);
+//		Match m2 = new Match(new Player("JAn"), new Player("Stian"), 2, 3);
+//		sb.addMatch(m);
+//		for (Player p : sb.players.values()) {
+//			System.out.println(p.getName());
+//		}
+//		sb.addMatch(m2);
+		Config.SQLUsername = "*SENSURED*";
+		Config.SQLPassword = "*SENSURED*";
+		Config.SQLURL = "jdbc:mysql://192.168.0.108/fifa2";
+		
 		sb.addMatch(m);
-		for (Player p : sb.players.values()) {
-			System.out.println(p.getName());
-		}
-		sb.addMatch(m2);
 	}
 	
 	// Mapping from user name to player id
@@ -75,6 +81,7 @@ public class ScoreBoard {
 			//savePlayers(ps);
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			exception = e;
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
@@ -193,16 +200,23 @@ public class ScoreBoard {
 		Connection con = null;
 		sql = "INSERT INTO " + Config.PLAYER_TABLE_NAME + 
 				" (" + Config.PLAYER_NAME + ", " + Config.PLAYER_RATING + ") " +
-						"VALUES (\"" + p.getName() + "\", \"" + p.getRating() + "\")";
+//						"VALUES (\"" + p.getName() + "\", \"" + p.getRating() + "\")";
+						"VALUES (?, \"" + p.getRating() + "\")";
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(Config.SQLURL, Config.SQLUsername, Config.SQLPassword);
-			Statement st = con.createStatement();
 			if (!duplicate) {
-				st.executeUpdate(sql);
+				PreparedStatement pst = con.prepareStatement(sql);
+				pst.setString(1, p.getName());
+				pst.executeUpdate();
 			}
-			ResultSet rs = st.executeQuery("SELECT " + Config.PLAYER_ID + " FROM " +
-					Config.PLAYER_TABLE_NAME + " WHERE " + Config.PLAYER_NAME + "=\"" + p.getName() + '"');
+//			ResultSet rs = st.executeQuery("SELECT " + Config.PLAYER_ID + " FROM " +
+//					Config.PLAYER_TABLE_NAME + " WHERE " + Config.PLAYER_NAME + "=\"" + p.getName() + '"');
+			String sql2 = "SELECT " + Config.PLAYER_ID + " FROM " +
+					Config.PLAYER_TABLE_NAME + " WHERE " + Config.PLAYER_NAME + "=?";
+			PreparedStatement pst2 = con.prepareCall(sql2);
+			pst2.setString(1, p.getName());
+			ResultSet rs = pst2.executeQuery();
 			if (!rs.next()) {
 				throw new RuntimeException("Failed reading ID for created user!");
 			}
@@ -255,18 +269,31 @@ public class ScoreBoard {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(Config.SQLURL, Config.SQLUsername, Config.SQLPassword);
-			Statement st = con.createStatement();
+			//Statement st = con.createStatement();
 			for (Match m : addedMatches) {
-				st.executeUpdate("INSERT INTO " + Config.MATCH_TABLE_NAME + 
+				String sql = "INSERT INTO " + Config.MATCH_TABLE_NAME + 
 						" (" + Config.MATCH_HOME_PLAYER_ID + ", " + Config.MATCH_AWAY_PLAYER_ID +
 						", " + Config.MATCH_HOME_GOALS + ", " + Config.MATCH_AWAY_GOALS + ", " + Config.MATCH_TIME +") " +
-						"VALUES " + 
-						"(" + playerIds.get(m.getHomePlayer().getName()) + ", " + 
-						playerIds.get(m.getAwayPlayer().getName()) + ", " +
-						m.getHomeGoals() + ", " + m.getAwayGoals() + ", " + System.currentTimeMillis() + ")");
+						"VALUES (?, ?, ?, ?, ?)";
+				PreparedStatement pst = con.prepareStatement(sql);
+				pst.setInt(1, playerIds.get(m.getHomePlayer().getName()));
+				pst.setInt(2, playerIds.get(m.getAwayPlayer().getName()));
+				pst.setInt(3, m.getHomeGoals());
+				pst.setInt(4, m.getAwayGoals());
+				pst.setLong(5, System.currentTimeMillis());
+				pst.executeUpdate();
+//				st.executeUpdate("INSERT INTO " + Config.MATCH_TABLE_NAME + 
+//						" (" + Config.MATCH_HOME_PLAYER_ID + ", " + Config.MATCH_AWAY_PLAYER_ID +
+//						", " + Config.MATCH_HOME_GOALS + ", " + Config.MATCH_AWAY_GOALS + ", " + Config.MATCH_TIME +") " +
+//						"VALUES " + 
+//						"(" + playerIds.get(m.getHomePlayer().getName()) + ", " + 
+//						playerIds.get(m.getAwayPlayer().getName()) + ", " +
+//						m.getHomeGoals() + ", " + m.getAwayGoals() + ", " + System.currentTimeMillis() + ")");
 			}
 			
 			addedMatches.clear();
+		} catch (Exception e) {
+			this.exception = e;
 		} finally {
 			try {
 				con.close();
