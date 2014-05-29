@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="style.css" type="text/css" >
 <jsp:useBean id="scoreBoard" class="matchStatistics.ScoreBoard" scope="page" />
 <jsp:useBean id="match" class="matchStatistics.Match" scope="page" />
 <jsp:setProperty name="match" property="*" />
@@ -7,6 +8,13 @@
 <%@ page import="java.text.*" %>
 <jsp:include page="config_loader.jsp" />
 <%
+
+	if (scoreBoard.getException() != null) {
+		out.println("Exception: " + scoreBoard.getException());
+	} else {
+		//out.println("No exception.");
+	}
+
     if (!scoreBoard.loadPlayers()) {
         out.println("Failed to load players: " + scoreBoard.getException() + "<br/>");
     }
@@ -42,9 +50,12 @@ if (match.getHomePlayer() != null && match.getAwayPlayer() != null) {
     <input type="text" name="homePlayerName">
     -
     <input type="text" name="awayPlayerName">
-    <input type="text" name="homeGoals">
+    <!--<input type="text" name="homeGoals">
     -
-    <input type="text" name="awayGoals">
+    <input type="text" name="awayGoals">-->
+	<input type="number" name="homeGoals" min="0" max="10000">
+	-
+	<input type="number" name="awayGoals" min="0" max="10000">
     <input type="submit" value="Submit">
 </form>
 <br/>
